@@ -29,21 +29,37 @@ enum class Command {
 class Translator {
 public:
 	explicit Translator(std::shared_ptr<TranslationUnit> unit);
+    Translator() = default;
 	~Translator();
 
 	int translate();
 
-	[[nodiscard]] int get_err_code() const;
-	[[nodiscard]] std::string get_err_msg() const;
+    [[maybe_unused]] [[nodiscard]]
+    const std::shared_ptr<TranslationUnit> &get_unit() const;
+    [[maybe_unused]]
+    void set_unit(std::shared_ptr<TranslationUnit> new_unit);
 
-	[[nodiscard]] const std::vector<Command> &get_executable() const;
+    [[maybe_unused]] [[nodiscard]]
+    int get_err_code() const;
+    [[maybe_unused]] [[nodiscard]]
+    std::string get_err_msg() const;
 
-    [[maybe_unused]] [[nodiscard]] const std::vector<size_t>& get_l_bracket_history() const;
+	[[nodiscard]]
+    const std::vector<Command> &get_executable() const;
 
-    [[maybe_unused]] [[nodiscard]] const std::vector<size_t>& get_r_bracket_history() const;
+    [[maybe_unused]] [[nodiscard]]
+    const std::vector<size_t> &get_l_bracket_history() const;
+    [[maybe_unused]]
+    void set_l_bracket_history(std::vector<size_t>&& l_history);
+
+    [[maybe_unused]] [[nodiscard]]
+    const std::vector<size_t> &get_r_bracket_history() const;
+    [[maybe_unused]]
+    void set_r_bracket_history(std::vector<size_t>&& r_history);
 
 private:
-	Command DecipherChar(char c) const;
+	[[nodiscard]]
+    Command DecipherChar(char c) const;
 
 	std::vector<Command> executable;
 

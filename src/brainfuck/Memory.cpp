@@ -1,6 +1,7 @@
 #include "Memory.h"
 
 #include <memory>
+#include <iostream>
 #include <array>
 
 namespace esoterics::brainfuck {
@@ -24,18 +25,18 @@ Cell Memory::at(CellPos position) const {
 }
 
 Cell Memory::operator[](CellPos position) const {
-	return memory.at(position);
+	return memory.at(verify_pos(position));
 }
 
 void Memory::set(CellPos position, Cell value) {
 	memory.at(verify_pos(position)) = value;
 }
 
-void Memory::increment(CellPos position) {
+[[maybe_unused]] void Memory::increment(CellPos position) {
 	memory.at(verify_pos(position))++;
 }
 
-void Memory::decrement(CellPos position) {
+[[maybe_unused]] void Memory::decrement(CellPos position) {
 	memory.at(verify_pos(position))--;
 }
 

@@ -3,21 +3,25 @@ project(esoterics)
 
 add_subdirectory(lib/googletest)
 
-add_executable(esoterics
-        src/brainfuck/Translator.cpp
-        src/brainfuck/Memory.cpp
-        src/common/File.cpp
-)
+add_executable(esoterics)
 add_executable(esoterics_tests)
 
 target_sources(esoterics PRIVATE
         src/main.cpp
         src/brainfuck/Brainfuck.cpp
+        src/brainfuck/Translator.cpp
+        src/brainfuck/Memory.cpp
+        src/common/File.cpp
 )
 
 target_sources(esoterics_tests PRIVATE
         src/brainfuck/Brainfuck.cpp
+        src/brainfuck/Memory.cpp
+        src/common/File.cpp
+        tests/common/File_Test.cpp
+        tests/brainfuck/Memory_Test.cpp
         tests/brainfuck/Brainfuck_Test.cpp
+        src/brainfuck/Translator.cpp
 )
 
 target_include_directories(esoterics PRIVATE

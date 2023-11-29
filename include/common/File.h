@@ -12,7 +12,12 @@ namespace esoterics {
 class File {
 public:
 	explicit File(const char *filename);
+    explicit File(std::string &&new_contents);
 	~File() = default;
+
+    // do not allow File object memory duplication
+    File(const File &other) = delete;
+    File &operator=(const File &other) = delete;
 
 	[[nodiscard]]
     const char *name() const;
@@ -20,7 +25,7 @@ public:
     Status get_status() const;
 
     [[maybe_unused]] [[nodiscard]]
-    const std::shared_ptr<std::string>& get_contents() const;
+    const std::string &get_contents() const;
 
 private:
 	template <typename T>
@@ -28,7 +33,7 @@ private:
 
 	const char *filename;
 	Status status_code = Status::Ok;
-	std::shared_ptr<std::string> contents;
+	std::string contents;
 };
 
 class TranslationUnit {
@@ -36,19 +41,20 @@ public:
     TranslationUnit() = default;
     template <typename ...Args>
     explicit TranslationUnit(Args... args);
+    explicit TranslationUnit(std::shared_ptr<File> file);
     ~TranslationUnit() = default;
 
     template <typename ...Args>
     void add(Args... filelist);
 
     [[nodiscard]]
-    const std::vector<File>& get() const;
+    const std::vector<std::shared_ptr<File>>& get() const;
 
-    File &operator[](std::size_t idx);
-    File &at(std::size_t idx);
+    std::shared_ptr<File> operator[](std::size_t idx);
+    std::shared_ptr<File> at(std::size_t idx);
 
 private:
-    std::vector<File> files;
+    std::vector<std::shared_ptr<File>> files;
 };
 
 }

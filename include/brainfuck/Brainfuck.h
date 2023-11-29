@@ -37,7 +37,7 @@ private:
     CellPos memptr = 0;
     size_t insptr = 0;
 
-    std::shared_ptr<Translator> translator;
+    std::unique_ptr<Translator> translator;
 
     class Memory memory;
 	typedef void (BrainfuckRuntime::*BrainfuckCommand)();

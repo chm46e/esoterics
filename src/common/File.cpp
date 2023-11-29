@@ -11,11 +11,13 @@ const char* File::name() const {
     return filename;
 }
 
-[[maybe_unused]] Status File::get_status() const {
+[[maybe_unused]]
+Status File::get_status() const {
     return status_code;
 }
 
-[[maybe_unused]] const std::shared_ptr<std::string>& File::get_contents() const {
+[[maybe_unused]]
+const std::string& File::get_contents() const {
     return contents;
 }
 
@@ -36,14 +38,14 @@ Status File::read_contents<Status>() {
     }
 
     internals << file.rdbuf();
-    // TODO: not very efficient (multiple allocations)
-    contents = std::make_shared<std::string>(internals.str());
+    // copy internals, keep the std::string
+    contents = internals.str();
     file.close();
     return status_code;
 }
 
 template<>
-std::shared_ptr<std::string> File::read_contents<std::shared_ptr<std::string>>() {
+const std::string &File::read_contents<const std::string &>() {
     std::fstream file;
     std::stringstream internals;
     file.open(filename, std::ios::in);
@@ -54,8 +56,8 @@ std::shared_ptr<std::string> File::read_contents<std::shared_ptr<std::string>>()
     }
 
     internals << file.rdbuf();
-    // TODO: not very efficient (multiple allocations)
-    contents = std::make_shared<std::string>(internals.str());
+    // copy internals, keep the std::string
+    contents = internals.str();
     file.close();
     return contents;
 }
@@ -63,6 +65,11 @@ std::shared_ptr<std::string> File::read_contents<std::shared_ptr<std::string>>()
 File::File(const char* filename)
         :filename(filename) {
     status_code = read_contents<Status>();
+}
+
+File::File(std::string&& new_contents)
+: contents(std::move(new_contents)), filename(nullptr) {
+    status_code = Status::Ok;
 }
 
 template<typename... Args>
@@ -75,18 +82,22 @@ void TranslationUnit::add(Args... filelist) {
     (files.push_back(filelist), ...);
 }
 
-const std::vector<File>& TranslationUnit::get() const {
+const std::vector<std::shared_ptr<File>>& TranslationUnit::get() const {
     return files;
 }
 
-File& TranslationUnit::operator[](std::size_t idx) {
+std::shared_ptr<File> TranslationUnit::operator[](std::size_t idx) {
     return files[idx];
 }
 
-File& TranslationUnit::at(std::size_t idx) {
+std::shared_ptr<File> TranslationUnit::at(std::size_t idx) {
     if (idx >= files.size())
         throw std::out_of_range("Index out of range");
     return files[idx];
+}
+
+TranslationUnit::TranslationUnit(std::shared_ptr<File> file) {
+    files.push_back(file);
 }
 
 }

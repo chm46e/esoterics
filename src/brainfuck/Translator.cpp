@@ -40,8 +40,8 @@ Command Translator::DecipherChar(char c) const {
 // TODO: add support for files' contents size > 1
 int Translator::translate() {
 	char c;
-	for (int i = 0; i < unit->at(0).get_contents()->size(); i++) {
-        c = unit->at(0).get_contents()->at(i);
+	for (int i = 0; i < unit->at(0)->get_contents().size(); i++) {
+        c = unit->at(0)->get_contents().at(i);
 		if (c == '[')
 			L_bracket_history.push_back(i);
 		else if (c == ']')
@@ -58,11 +58,11 @@ int Translator::translate() {
 	return status_code;
 }
 
-int Translator::get_err_code() const {
+[[maybe_unused]] int Translator::get_err_code() const {
 	return status_code;
 }
 
-std::string Translator::get_err_msg() const {
+[[maybe_unused]] std::string Translator::get_err_msg() const {
 	return status_message;
 }
 
@@ -70,11 +70,34 @@ const std::vector<Command> &Translator::get_executable() const {
 	return executable;
 }
 
-[[maybe_unused]] const std::vector<size_t>& Translator::get_l_bracket_history() const {
+[[maybe_unused]]
+const std::vector<size_t>& Translator::get_l_bracket_history() const {
     return L_bracket_history;
 }
 
-[[maybe_unused]] const std::vector<size_t>& Translator::get_r_bracket_history() const {
+[[maybe_unused]]
+const std::vector<size_t>& Translator::get_r_bracket_history() const {
     return R_bracket_history;
 }
+
+[[maybe_unused]]
+void Translator::set_r_bracket_history(std::vector<size_t>&& r_history) {
+    R_bracket_history = std::move(r_history);
+}
+
+[[maybe_unused]]
+void Translator::set_l_bracket_history(std::vector<size_t>&& l_history) {
+    L_bracket_history = std::move(l_history);
+}
+
+[[maybe_unused]]
+const std::shared_ptr<TranslationUnit>& Translator::get_unit() const {
+    return unit;
+}
+
+[[maybe_unused]]
+void Translator::set_unit(std::shared_ptr<TranslationUnit> new_unit) {
+    unit = std::move(new_unit);
+}
+
 }

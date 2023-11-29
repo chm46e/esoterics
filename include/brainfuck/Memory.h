@@ -6,7 +6,7 @@
 
 namespace esoterics::brainfuck {
 
-typedef int16_t CellPos;
+typedef int32_t CellPos;
 typedef uint8_t Cell;
 
 // bounded, to allow overwrap
@@ -20,8 +20,10 @@ public:
 	Memory() = default;
 	~Memory() = default;
 
-	[[nodiscard]] CellPos verify_pos(CellPos position) const;
-	[[nodiscard]] Cell at(CellPos position) const;
+	[[nodiscard]]
+    CellPos verify_pos(CellPos position) const;
+	[[nodiscard]]
+    Cell at(CellPos position) const;
 	Cell operator[](CellPos position) const;
 
 	template <typename T>
@@ -33,8 +35,11 @@ public:
 	 * requires last_accessed_pos (could be unsafe implementation)
 	 */
 	void set(CellPos position, Cell value);
-	void increment(CellPos position);
-	void decrement(CellPos position);
+
+    [[maybe_unused]]
+    void increment(CellPos position);
+    [[maybe_unused]]
+    void decrement(CellPos position);
 
 	[[maybe_unused]]
 	std::shared_ptr<std::array<Cell, MAXCELLS>> get_raw_memory();

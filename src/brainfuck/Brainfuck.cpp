@@ -8,10 +8,16 @@ namespace esoterics::brainfuck {
 
 BrainfuckRuntime::BrainfuckRuntime(const char *filename)
 : filename(filename) {
-    File file{filename};
+    std::shared_ptr<File> file = std::make_shared<File>(filename);
     std::shared_ptr<TranslationUnit> unit = std::make_shared<TranslationUnit>(file);
-    translator = std::make_shared<Translator>(unit);
+    translator = std::make_unique<Translator>(unit);
     translator->translate();
+
+    auto actual = translator->get_executable();
+    for (const auto& command : actual) {
+        std::cout << static_cast<int>(command) << ", ";
+    }
+    std::cout << std::endl;
 
     commands = {
             &BrainfuckRuntime::UNKNOWN,
