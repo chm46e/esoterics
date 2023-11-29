@@ -13,12 +13,6 @@ BrainfuckRuntime::BrainfuckRuntime(const char *filename)
     translator = std::make_unique<Translator>(unit);
     translator->translate();
 
-    auto actual = translator->get_executable();
-    for (const auto& command : actual) {
-        std::cout << static_cast<int>(command) << ", ";
-    }
-    std::cout << std::endl;
-
     commands = {
             &BrainfuckRuntime::UNKNOWN,
             &BrainfuckRuntime::MOVE_PTR_RIGHT,
